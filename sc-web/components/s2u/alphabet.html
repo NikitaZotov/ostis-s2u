@@ -1,0 +1,276 @@
+<html>
+<head>
+  <link href="static/components/css/economics.css" rel="stylesheet">
+
+  <style>
+    html, body {
+      background-color: #fff;
+      margin: 0px;
+      overflow: hidden;
+      font-family: Monospace;
+      font-size: 13px;
+      text-align: center;
+      font-weight: bold;
+      text-align: center;
+      height: 100%;
+    }
+
+    .viewer {
+      height: 100%;
+      width: 100%;
+    }
+
+  </style>
+</head>
+
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="viewer">
+  <defs>
+
+    <circle id="economics.node.const.outer" cx="0" cy="0" r="10"/>
+    <rect id="economics.node.var.outer" width="20" height="20" x="-10" y="-10"/>
+
+    <clip-path id="economics.node.const.clip">
+      <use xlink:href="#economics.node.const.outer"/>
+    </clip-path>
+
+    <clip-path id="economics.node.var.clip">
+      <use xlink:href="#economics.node.var.outer"/>
+    </clip-path>
+
+    <!-- define constant nodes -->
+    <g id="economics.node">
+      <circle cx="0" cy="0" r="5"/>
+      <text x="7" y="15" class="EconomicsText">economics.node</text>
+    </g>
+
+    <g id="economics.node.const">
+      <use xlink:href="#economics.node.const.outer"/>
+      <text x="17" y="21" class="EconomicsText">economics.node.const</text>
+    </g>
+
+    <g id="economics.node.const.tuple">
+      <use xlink:href="#economics.node.const.outer"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px"/>
+      <text x="17" y="21" class="EconomicsText">economics.node.const.tuple</text>
+    </g>
+
+    <g id="economics.node.const.struct">
+      <use xlink:href="#economics.node.const.outer"/>
+      <circle cx="0" cy="0" r="3" stroke="none" fill="#000"/>
+      <text x="17" y="21" class="EconomicsText">economics.node.const.struct</text>
+    </g>
+
+    <g id="economics.node.const.role">
+      <use xlink:href="#economics.node.const.outer"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px"/>
+      <line x1="0" x2="0" y1="-10" y2="10" stroke-width="3px"/>
+      <text x="17" y="21" class="EconomicsText">economics.node.const.role</text>
+    </g>
+
+    <g id="economics.node.const.norole">
+      <use xlink:href="#economics.node.const.outer"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px" transform="rotate(45, 0, 0)"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px" transform="rotate(-45, 0, 0)"/>
+      <text x="17" y="21" class="EconomicsText">economics.node.const.norole</text>
+    </g>
+
+    <g id="economics.node.const.class">
+      <use xlink:href="#economics.node.const.outer"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px" transform="rotate(45, 0, 0)"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px" transform="rotate(-45, 0, 0)"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px"/>
+      <text x="17" y="21" class="EconomicsText">economics.node.const.class</text>
+    </g>
+
+    <g id="economics.node.const.abstract"
+    ">
+    <use xlink:href="#economics.node.const.outer"/>
+    <g stroke-width="1px ">
+      <line x1="-10" x2="10" y1="-6" y2="-6"/>
+      <line x1="-10" x2="10" y1="-3" y2="-3"/>
+      <line x1="-10" x2="10" y1="0" y2="0"/>
+      <line x1="-10" x2="10" y1="3" y2="3"/>
+      <line x1="-10" x2="10" y1="6" y2="6"/>
+    </g>
+    <text x="17" y="21" class="EconomicsText">economics.node.const.abstract</text>
+    </g>
+
+    <g id="economics.node.const.material">
+      <use xlink:href="#economics.node.const.outer"/>
+      <g stroke-width="1px" transform="rotate(-45, 0, 0)">
+        <line x1="-10" x2="10" y1="-6" y2="-6"/>
+        <line x1="-10" x2="10" y1="-3" y2="-3"/>
+        <line x1="-10" x2="10" y1="0" y2="0"/>
+        <line x1="-10" x2="10" y1="3" y2="3"/>
+        <line x1="-10" x2="10" y1="6" y2="6"/>
+      </g>
+      <text x="17" y="21" class="EconomicsText">economics.node.const.material</text>
+    </g>
+
+
+    <!-- define variable nodes -->
+    <g id="economics.node.var">
+      <use xlink:href="#economics.node.var.outer"/>
+      <text x="17" y="21" class="EconomicsText">economics.node.var</text>
+    </g>
+
+    <g id="economics.node.var.tuple">
+      <use xlink:href="#economics.node.var.outer"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px"/>
+      <text x="17" y="21" class="EconomicsText">economics.node.var.tuple</text>
+    </g>
+
+    <g id="economics.node.var.struct">
+      <use xlink:href="#economics.node.var.outer"/>
+      <circle cx="0" cy="0" r="3" stroke="none" fill="#000"/>
+      <text x="17" y="21" class="EconomicsText">economics.node.var.struct</text>
+    </g>
+
+    <g id="economics.node.var.role">
+      <use xlink:href="#economics.node.var.outer"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px"/>
+      <line x1="0" x2="0" y1="-10" y2="10" stroke-width="3px"/>
+      <text x="17" y="21" class="EconomicsText">economics.node.var.role</text>
+    </g>
+
+    <g id="economics.node.var.norole">
+      <use xlink:href="#economics.node.var.outer"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px" transform="rotate(45, 0, 0)"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px" transform="rotate(-45, 0, 0)"/>
+      <text x="17" y="21" class="EconomicsText">economics.node.var.norole</text>
+    </g>
+
+    <g id="economics.node.var.class">
+      <use xlink:href="#economics.node.var.outer"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px" transform="rotate(45, 0, 0)"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px" transform="rotate(-45, 0, 0)"/>
+      <line x1="-10" x2="10" y1="0" y2="0" stroke-width="3px"/>
+      <text x="17" y="21" class="EconomicsText">economics.node.var.class</text>
+    </g>
+
+    <g id="economics.node.var.abstract">
+      <use xlink:href="#economics.node.var.outer"/>
+      <g stroke-width="1px">
+        <line x1="-10" x2="10" y1="-6" y2="-6"/>
+        <line x1="-10" x2="10" y1="-3" y2="-3"/>
+        <line x1="-10" x2="10" y1="0" y2="0"/>
+        <line x1="-10" x2="10" y1="3" y2="3"/>
+        <line x1="-10" x2="10" y1="6" y2="6"/>
+      </g>
+      <text x="17" y="21" class="EconomicsText">economics.node.var.abstract</text>
+    </g>
+
+    <g id="economics.node.var.material">
+      <use xlink:href="#economics.node.var.outer"/>
+      <g stroke-width="1px" transform="rotate(-45, 0, 0)">
+        <line x1="-10" x2="10" y1="-6" y2="-6"/>
+        <line x1="-10" x2="10" y1="-3" y2="-3"/>
+        <line x1="-10" x2="10" y1="0" y2="0"/>
+        <line x1="-10" x2="10" y1="3" y2="3"/>
+        <line x1="-10" x2="10" y1="6" y2="6"/>
+      </g>
+      <text x="17" y="21" class="EconomicsText">economics.node.var.material</text>
+    </g>
+
+
+    <!-- arcs -->
+    <marker id="economics.target.arrow"
+    'viewBox="0 -5 10 10" refX="8" markerWidth="7" markerHeight="10" orient="auto">
+    <path d="M0,-4L10,0L0,4" fill="#000"/>
+    </marker>
+
+    <marker id="end-arrow-access" viewBox="0 -5 10 10" refX="0" markerWidth="5" markerHeight="10" orient="auto">
+      <path d="M0,-4L10,0L0,4"></path>
+    </marker>
+
+    <marker id="end-arrow-common" viewBox="0 -5 10 10" refX="0" markerWidth="2" markerHeight="6" orient="auto">
+      <path d="M0,-4L10,0L0,4"
+      </path>
+    </marker>
+
+  </defs>
+
+  <!-- constant nodes -->
+  <use xlink:href="#economics.node" x="75" y="25" id="comp1"/>
+  <use xlink:href="#economics.node.const" x="75" y="75" id="comp2" class="EconomicsNode"/>
+  <use xlink:href="#economics.node.const.tuple" x="75" y="125" id="comp3" class="EconomicsNode"/>
+  <use xlink:href="#economics.node.const.struct" x="75" y="175" id="comp4" class="EconomicsNode"/>
+  <use xlink:href="#economics.node.const.role" x="75" y="225" id="comp5" class="EconomicsNode"/>
+  <use xlink:href="#economics.node.const.norole" x="75" y="275" id="comp6" class="EconomicsNode"/>
+  <use xlink:href="#economics.node.const.class" x="75" y="325" id="comp7" class="EconomicsNode"/>
+  <use xlink:href="#economics.node.const.abstract" x="75" y="375" id="comp8" class="EconomicsNode"/>
+  <use xlink:href="#economics.node.const.material" x="75" y="425" id="comp9" class="EconomicsNode"/>
+
+  <!-- variable nodes -->
+  <use xlink:href="#economics.node.var" x="325" y="75" id="comp10" class="EconomicsNode EconomicsHighlighted"/>
+  <use xlink:href="#economics.node.var.tuple" x="325" y="125" id="comp11" class="EconomicsNode"/>
+  <use xlink:href="#economics.node.var.struct" x="325" y="175" id="comp12" class="EconomicsNode"/>
+  <use xlink:href="#economics.node.var.role" x="325" y="225" id="comp13" class="EconomicsNode"/>
+  <use xlink:href="#economics.node.var.norole" x="325" y="275" id="comp14" class="EconomicsNode"/>
+  <use xlink:href="#economics.node.var.class" x="325" y="325" id="comp15" class="EconomicsNode"/>
+  <use xlink:href="#economics.node.var.abstract" x="325" y="375" id="comp16" class="EconomicsNode"/>
+  <use xlink:href="#economics.node.var.material" x="325" y="425" id="comp17" class="EconomicsNode"/>
+
+
+  <!-- edges -->
+
+
+  <g id="economics.edge.common" id="comp18" class="EconomicsEdge">
+    <path d="M 555 75 L 655 75" stroke-width="8" stroke="#000"/>
+    <path d="M 555 75 L 655 75" stroke-width="5" stroke="#fff"/>
+    <path d="M 555 75 L 655 75" stroke-width="2" stroke="#000" class="EconomicsEdgeVarDashAccessPerm"/>
+  </g>
+
+  <g id="economics.arc.common" id="comp19" class="EconomicsEdge">
+    <path d="M 555 105 L 655 105" stroke-width="8" stroke="#000"/>
+    <path d="M 555 105 L 655 105" stroke-width="5" stroke="#fff"/>
+    <path d="M 555 105 L 655 105" stroke-width="2" stroke="#000"
+          class="EconomicsEdgeVarDashAccessPerm EconomicsEdgeEndArrowAccess"/>
+  </g>
+
+  <g id="economics.arc.const.pos.perm.access" id="comp20" class="EconomicsEdge">
+    <path d="M 555 135 L 655 135" stroke-width="2" stroke="#000" class="EconomicsEdge EconomicsEdgeEndArrowAccess"/>
+    <path d="M 555 135 L 655 135" stroke-width="4" stroke="#000" class="EconomicsEdgePermDash"/>
+  </g>
+
+
+  <g id="economics.edge.const" id="comp21" class="EconomicsEdge">
+    <path d="M 555 165 L 655 165" stroke-width="8" stroke="#000"/>
+    <path d="M 555 165 L 655 165" stroke-width="5" stroke="#fff"/>
+  </g>
+
+  <g id="economics.edge.var" id="comp22" class="EconomicsEdge">
+    <path d="M 555 195 L 655 195" stroke-width="8" stroke="#000"/>
+    <path d="M 555 195 L 655 195" stroke-width="5" stroke="#fff"/>
+    <path d="M 555 195 L 655 195" stroke-width="5" stroke="#000" class="EconomicsEdgeVarDashCommon"/>
+  </g>
+
+
+  <g id="economics.edge.const" id="comp23" class="EconomicsEdge">
+    <path d="M 555 225 L 655 225" stroke-width="8" stroke="#000"/>
+    <path d="M 555 225 L 655 225" stroke-width="5" stroke="#fff" class="EconomicsEdgeEndArrowCommon"/>
+  </g>
+
+  <g id="economics.edge.var" id="comp24" class="EconomicsEdge" stroke="#f00" fill="#00f">
+    <path d="M 555 255 L 655 255" stroke-width="8"/>
+    <path d="M 555 255 L 655 255" stroke-width="5" stroke="#fff"/>
+    <path d="M 555 255 L 655 255" stroke-width="5" class="EconomicsEdgeVarDashCommon EconomicsEdgeEndArrowCommon"/>
+  </g>
+
+
+  <g id="economics.arc.var.pos.perm.access" id="comp25" class="EconomicsEdge">
+    <path d="M 555 285 L 655 285" stroke-width="2" stroke="#000"
+          class="EconomicsEdge EconomicsEdgeVarDashAccessPerm EconomicsEdgeEndArrowAccess"/>
+  </g>
+
+  <g id="economics.arc.var.pos.perm.access" id="comp25" class="EconomicsEdge">
+    <path d="M 555 315 L 655 315" stroke-width="2" stroke="#000" class="EconomicsEdge EconomicsEdgeEndArrowAccess"/>
+    <path d="M 555 315 L 655 315" stroke-width="10" stroke="#000" class="EconomicsEdge EconomicsEdgePermNegDash"/>
+  </g>
+
+</svg>
+
+</body>
+</html>
+

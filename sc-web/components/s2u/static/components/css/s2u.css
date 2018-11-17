@@ -1,0 +1,326 @@
+.S2uSvg {
+  background-color: #fff;
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  min-height: 650px;
+  height: calc(100vh - 150px);
+}
+
+.S2uText {
+    fill: #00a;
+    font-family: "Arial";
+    font-style: italic;
+    font-weight: bold;
+    font-size: 14px;
+    pointer-events: none;
+    stroke: none;
+}
+
+.S2uNodeEmpty {
+}
+
+.S2uNode {
+    fill: #eee;
+    stroke: #000;
+    stroke-width: 5px;
+}
+
+.S2uLink {
+    fill: #eee;
+    stroke: #000;
+    stroke-width: 5px;
+}
+
+.S2uLinkContainer {
+    display: block; 
+    padding: 5px 0px 5px 5px;
+    min-width: 25px;
+    min-height: 25px;
+    
+}
+
+/* --- Edges --- */
+.S2uEdgeSelectBounds {
+    stroke: none;
+    stroke-width: 10px;
+    fill: none;
+}
+
+.S2uEdge {
+    fill: none;
+    stroke-linejoin: round;
+}
+
+.S2uEdgeUnknown {
+    stroke: #a00;
+    stroke-width: 3px;
+    fill: none;
+}
+
+.S2uEdgeCommonBack {
+    stroke-width: 8px;
+    fill: none;
+}
+
+.S2uEdgeCommonForeground {
+    stroke-width: 5px;
+    stroke: #fff;
+    fill: none;
+}
+
+.S2uEdgeCommonForegroundVar {
+    stroke-width: 5px;
+    fill: none;
+}
+
+.S2uEdgeAccessComonDash {
+    stroke-width: 4px;
+    stroke-dasharray: 4, 4;
+    fill: none;
+}
+
+.S2uEdgeAccessPerm {
+    stroke-width: 2px;
+    fill: none;
+}
+
+.S2uEdgeAccessTemp {
+    stroke-width: 2px;
+    stroke-dasharray: 2, 2;
+    fill: none;
+}
+
+.S2uEdgeAccessTempVar {
+    stroke-width: 2px;
+    stroke-dasharray: 2, 2, 2, 2, 2, 2, 2, 14;
+    fill: none;
+}
+
+.S2uEdgeEndArrowAccess {
+    fill: none;
+}
+
+.S2uEdgeEndArrowCommon {
+    fill: none;
+}
+
+.S2uEdgeVarDashAccessPerm {
+    stroke-dasharray: 14, 14;
+}
+
+.S2uEdgeVarDashCommon {
+    stroke-dasharray: 14, 14;
+}
+
+.S2uEdgePermNegDash {
+    stroke-dasharray: 0, 20, 2, 6;
+    stroke-width: 10px;
+}
+
+/* TODO */
+.S2uEdgeFuzDash {
+    stroke-dasharray: 0, 20, 2, 6;
+    stroke-width: 10px;
+}
+
+/* --------- */
+.S2uEdgePermDash {
+    stroke-dasharray: 4, 10;
+}
+
+/* --- contours --- */
+.S2uContour {
+    fill: #ddddff;
+    stroke: black;
+    stroke-width: 2px;
+    stroke-linejoin: round;
+    opacity: 0.9;
+}
+
+.S2uRemovePoint {
+    stroke: #FBF4F2;
+    stroke-width: 3px;
+    fill: #D60011;
+}
+
+.S2uAcceptPoint {
+    stroke: #FBF4F2;
+    stroke-width: 3px;
+    fill: #33BB33;
+}
+
+.S2uAcceptPointHighlighted {
+    stroke: #FcF5F3;
+    stroke-width: 3px;
+    fill: #44cc44;
+}
+
+.S2uRemovePointHighlighted {
+    fill: #FF3300;
+    stroke: #FFBE52;
+}
+
+.S2uLinePoint {
+    stroke: #FBF4F2;
+    stroke-width: 4px;
+    fill: #D60011;
+}
+
+.S2uLinePointHighlighted {
+    fill: #FF3300;
+    stroke: #FFBE52;
+    cursor: move;
+}
+
+path.dragline {
+    stroke: #535A69;
+    stroke-dasharray: 2,2;
+    stroke-width: 2px;
+    fill:   none;
+}
+
+path.draglineBus {
+    stroke: blue;
+    stroke-dasharray: 25,10,10,10;
+    stroke-width: 5px;
+    fill:   none;
+}
+
+path.S2uEdge.hidden {
+    stroke-width: 0;
+}
+
+path.S2uBus {
+    fill:   none;
+    stroke: black;
+    stroke-dasharray: none;
+    stroke-width: 5px;
+}
+
+path.S2uBusPath {
+    fill:   none;
+    stroke-width: 5px;
+}
+
+/* ----- States ----- */
+.S2uElement {
+    cursor: pointer;
+}
+
+.S2uStateNormal {
+    stroke: #777;
+}
+
+.S2uStateNormal.S2uStateHighlighted {
+    stroke: #BBB;
+}
+
+.S2uStateMergedWithMemory {
+    stroke: #076EDD;
+}
+
+.S2uStateMergedWithMemory.S2uStateHighlighted {
+    stroke: #7189A3;
+}
+
+.S2uStateNewInMemory {
+    stroke: #5E7027;
+}
+
+.S2uStateNewInMemory.S2uStateHighlighted {
+    stroke: #AEB893;
+}
+
+.S2uStateFromMemory {
+    stroke: #000;
+}
+
+.S2uStateFromMemory.S2uStateHighlighted {
+    stroke: #444;
+}
+
+.S2uStateSelected {
+    stroke: #C73E00;
+}
+
+.S2uStateSelected.S2uStateHighlighted {
+    stroke: #FD8E00;
+}
+
+/* ------------- User interface -------------- */
+.s2u-tools-panel {
+    position: absolute;
+}
+
+.s2u-tools-panel img {
+    width: 32px;
+}
+
+#s2u-set-content-input {
+    resize: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#s2u-set-content-buttons-group {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#s2u-set-content-buttons-group button span {
+    margin-right: 5px;
+}
+
+.s2u-type-list {
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+.tt-dropdown-menu .tt-dataset-idtf {
+    background-color: #f5f5f5;
+    border: 1px solid #a3a3a3;
+    border-radius: 2px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-width: 450px;
+    max-height: 400px;
+}
+
+.tt-dropdown-menu .tt-dataset-idtf .tt-suggestion {
+    display: inline-block;
+    max-width: 450px !important;
+    white-space: normal !important;
+    width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+    cursor: pointer;
+}
+
+.tt-dropdown-menu .tt-dataset-idtf .tt-suggestion p {
+    margin: 5px 2px;
+}
+
+.tt-dropdown-menu .tt-dataset-idtf .tt-suggestion .tt-suggestion-icon {
+    width: 16px;
+    height: 16px;
+    margin: auto 2px;
+}
+
+.tt-dropdown-menu .tt-dataset-idtf .tt-suggestions {
+    width: 100%;
+}
+
+.tt-dropdown-menu .tt-dataset-idtf .tt-suggestion:nth-child(odd) {
+    background-color: #e9e9e9;
+}
+
+.tt-dropdown-menu .tt-dataset-idtf .tt-suggestion:hover {
+    background-color: #428bca !important;
+}

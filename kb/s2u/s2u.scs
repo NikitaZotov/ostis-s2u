@@ -1,0 +1,27 @@
+format_s2u_json
+<- sc_node_not_relation;
+<- format;
+=> nrel_main_idtf: 
+	[формат s2u (json)] 
+	(* 
+	<- lang_ru;;
+	 *);
+=> nrel_main_idtf: 
+	[format s2u (json)] 
+	(* 
+	<- lang_en;;
+	*);
+=> nrel_mimetype:
+	[application/json];;
+
+s2u_code <- ui_external_languages;
+=> nrel_main_idtf: 
+	[Визуализатор синтаксических схем]
+	(* 
+	<- lang_ru;;
+	 *);
+=> nrel_main_idtf: 
+	[Syntax visualizer]
+	(* 
+	<- lang_en;;
+	*);;
