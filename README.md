@@ -16,13 +16,13 @@ grunt build
 Create new diagramm (example SCg)
 
 
-<img src="https://raw.githubusercontent.com/blrB/ostis-s2u/master/img/ostis_scg_diagramm.png" alt="ostis_scg_diagramm"/>
+<img src="https://raw.githubusercontent.com/blrB/ostis-s2u/master/image/ostis_scg_diagramm.png" alt="ostis_scg_diagramm"/>
 
 Add a visual description for primitives (example SCg and SVG text)
 
-<img src="https://raw.githubusercontent.com/blrB/ostis-s2u/master/img/ostis_scg_s2u_kb.png" alt="ostis_scg_s2u_kb"/>
+<img src="https://raw.githubusercontent.com/blrB/ostis-s2u/master/image/ostis_scg_s2u_kb.png" alt="ostis_scg_s2u_kb"/>
 
 Result:
 
-<img src="https://raw.githubusercontent.com/blrB/ostis-s2u/master/img/ostis_s2u_diagramm.png" alt="ostis_s2u_diagramm"/>
+<img src="https://raw.githubusercontent.com/blrB/ostis-s2u/master/image/ostis_s2u_diagramm.png" alt="ostis_s2u_diagramm"/>
 
