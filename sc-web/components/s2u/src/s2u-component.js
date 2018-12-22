@@ -24,7 +24,7 @@ S2uComponent = {
 var s2uViewerWindow = function (sandbox) {
 
     this.domContainer = sandbox.container;
-    this.windowId = sandbox.container.replace(/.*?_(.*)/, '$1');
+    this.question_addr = sandbox.container.replace(/_format_.*/, '').replace(/.*?_(.*)/, '$1');
     this.sandbox = sandbox;
     this.tree = new S2u.Tree();
     this.editor = new S2u.Editor();
@@ -204,11 +204,9 @@ var s2uViewerWindow = function (sandbox) {
     this.sandbox.eventApplyTranslation = $.proxy(this.applyTranslation, this);
     this.sandbox.eventStructUpdate = $.proxy(this.receiveData, this);
 
-    let question_addr = this.windowId;
-
     // find contour and draw
     new Promise(resolve => {
-        SCWeb.core.Server.getAnswerTranslated(question_addr, this.sandbox.keynodes.format_scs_json, function (answer) {
+        SCWeb.core.Server.getAnswerTranslated(this.question_addr, this.sandbox.keynodes.format_scs_json, function (answer) {
             resolve(answer.link);
         })
     }).then(link => {
@@ -217,7 +215,7 @@ var s2uViewerWindow = function (sandbox) {
     });
 
     // subscripe component
-    this.window_id = this.windowId + '_' + this.sandbox.command_state.format;
+    this.window_id = this.question_addr + '_format_' + this.sandbox.command_state.format;
     SCWeb.ui.KeyboardHandler.subscribeWindow(this.window_id, this.editor.keyboardCallbacks);
     SCWeb.ui.OpenComponentHandler.subscribeComponent(this.window_id, this.editor.openComponentCallbacks);
 };
