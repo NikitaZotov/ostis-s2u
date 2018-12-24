@@ -18,6 +18,7 @@ S2u.TemplateFinder.prototype = {
         this.editor = params.scene;
         this.scene = params.editor.scene;
         this.render = params.editor.render;
+        this.sandbox = params.sandbox;
     },
 
     drawByContour: function () {
@@ -223,6 +224,7 @@ S2u.TemplateFinder.prototype = {
     },
 
     loadTemplateParams: function (template,link) {
+        let currentLanguage = this.sandbox.getCurrentLanguage();
         return new Promise((resolve, reject) => {
             let array = S2uObjectsHandler.getMatches(template, S2uObjectsHandler.TEMPLATE_REGEX);
             let promisesGetParams = array.map((idf) => {
@@ -237,6 +239,13 @@ S2u.TemplateFinder.prototype = {
                                 S2uKeynodesHandler.scKeynodes[idf]
                             ],
                             {"idf": 2}
+                        ),
+                        SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3F_A_F,
+                            [
+                                parseInt(currentLanguage),
+                                sc_type_arc_pos_const_perm,
+                                "idf"
+                            ]
                         )
                     ).done(function (results) {
                         let html = results.get(0, "idf");

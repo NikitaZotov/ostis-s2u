@@ -75,6 +75,8 @@ S2u.Editor.prototype = {
 
         this.containerId = params.containerId;
 
+        this.finder = params.finder;
+
         if (params.autocompletionVariants)
             this.autocompletionVariants = params.autocompletionVariants;
         if (params.translateToSc)

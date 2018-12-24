@@ -25,6 +25,7 @@ var s2uViewerWindow = function (sandbox) {
 
     this.domContainer = sandbox.container;
     this.question_addr = sandbox.container.replace(/_format_.*/, '').replace(/.*?_(.*)/, '$1');
+    console.log(sandbox)
     this.sandbox = sandbox;
     this.tree = new S2u.Tree();
     this.editor = new S2u.Editor();
@@ -66,6 +67,7 @@ var s2uViewerWindow = function (sandbox) {
     );
 
     this.finder.init({
+        sandbox: sandbox,
         editor: this.editor
     });
 
@@ -182,6 +184,7 @@ var s2uViewerWindow = function (sandbox) {
     };
 
     this.applyTranslation = function (namesMap) {
+        let self = this;
         for (addr in namesMap) {
             var obj = this.editor.scene.getObjectByScAddr(addr);
             if (obj) {
@@ -190,7 +193,10 @@ var s2uViewerWindow = function (sandbox) {
             }
         }
         this.editor.render.updateTexts();
-        //this.editor.scene.updateObjectsVisual();
+        let templatesParams = self.editor.render.updateLinksMapIdf();
+        Promise.all(templatesParams).then(function (data) {
+            self.editor.render.updateLinksTexts();
+        });
     };
 
 

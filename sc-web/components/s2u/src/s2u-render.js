@@ -8,6 +8,8 @@ S2u.Render.prototype = {
         this.containerId = params.containerId;
         this.sandbox = params.sandbox;
 
+        this.finder = params.finder;
+
         this.linkBorderWidth = 1;
         this.scale = 1;
         this.translate = [0, 0];
@@ -558,6 +560,17 @@ S2u.Render.prototype = {
         this.d3_nodes.select('text').text(function (d) {
             return d.text;
         });
+    },
+
+    updateLinksMapIdf: function () {
+        let self = this;
+        let templatesParams = [];
+        this.d3_links.each(function (d) {
+            let htmlCode = S2uObjectsHandler.getElementTemplateForObject(d.sc_addr);
+            let templateParamsPromise = self.finder.loadTemplateParams(htmlCode, d);
+            templatesParams.push(templateParamsPromise)
+        });
+        return templatesParams;
     },
 
     updateLinksTexts: function () {
