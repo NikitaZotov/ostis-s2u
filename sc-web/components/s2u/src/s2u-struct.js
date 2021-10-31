@@ -1,28 +1,30 @@
-function S2uFromScImpl(_sandbox, _editor, aMapping) {
+function S2uFromScImpl(sandbox, editor, arcMapping)
+{
+    var self = this;
 
-    var self = this,
-        arcMapping = aMapping,
-        tasks = [],
-        timeout = 0,
+    let tasks = [],
         batch = null,
-        tasksLength = 0,
-        editor = _editor,
-        sandbox = _sandbox;
+        tasksLength = 0;
 
-    function resolveIdtf(addr, obj) {
-        sandbox.getIdentifier(addr, function (idtf) {
+    function resolveIdtf(addr, obj)
+    {
+        sandbox.getIdentifier(addr, function (idtf)
+        {
             obj.setText(idtf);
         });
     }
 
-    function randomPos() {
+    function randomPosition()
+    {
         return new S2u.Vector3(100 * Math.random(), 100 * Math.random(), 0);
     }
 
-    var doBatch = function () {
-
-        if (!batch) {
-            if (!tasks.length || tasksLength === tasks.length) {
+    const doBatch = function ()
+    {
+        if (!batch)
+        {
+            if (!tasks.length || tasksLength === tasks.length)
+            {
                 window.clearInterval(self.timeout);
                 self.timeout = 0;
                 return;
@@ -30,47 +32,56 @@ function S2uFromScImpl(_sandbox, _editor, aMapping) {
             batch = tasks.splice(0, Math.max(150, tasks.length));
             tasksLength = tasks.length;
         }
-        if (batch) {
 
-            taskDoneCount = 0;
-            for (var i = 0; i < batch.length; ++i) {
-                var task = batch[i];
-                var addr = task[0];
-                var type = task[1];
+        if (batch)
+        {
+            for (let i = 0; i < batch.length; ++i)
+            {
+                const task = batch[i],
+                      addr = task[0],
+                      type = task[1];
 
                 if (editor.scene.getObjectByScAddr(addr))
+                {
                     continue;
+                }
 
-                if (type & sc_type_node) {
-                    var model_node = S2u.Creator.createNode(type, randomPos(), '');
+                if (type && sc_type_node)
+                {
+                    const model_node = S2u.Creator.createNode(type, randomPosition(), '');
                     editor.scene.appendNode(model_node);
                     editor.scene.objects[addr] = model_node;
                     model_node.setScAddr(addr);
                     model_node.setObjectState(S2uObjectState.FromMemory);
                     resolveIdtf(addr, model_node);
-                } else if (type & sc_type_arc_mask) {
-                    var bObj = editor.scene.getObjectByScAddr(task[2]);
-                    var eObj = editor.scene.getObjectByScAddr(task[3]);
-                    if (!bObj || !eObj) {
+                }
+                else if (type && sc_type_arc_mask)
+                {
+                    const bObj = editor.scene.getObjectByScAddr(task[2]);
+                    const eObj = editor.scene.getObjectByScAddr(task[3]);
+                    if (!bObj || !eObj)
+                    {
                         tasks.push(task);
-                    } else {
-                        var model_edge = S2u.Creator.createEdge(bObj, eObj, type);
+                    }
+                    else
+                    {
+                        const model_edge = S2u.Creator.createEdge(bObj, eObj, type);
                         editor.scene.appendEdge(model_edge);
                         editor.scene.objects[addr] = model_edge;
                         model_edge.setScAddr(addr);
                         model_edge.setObjectState(S2uObjectState.FromMemory);
                         resolveIdtf(addr, model_edge);
                     }
-                } else if (type & sc_type_link) {
-                    var containerId = 's2u-window-' + sandbox.addr + '-' + addr + '-' + new Date().getUTCMilliseconds();
-                    ;
-                    var model_link = S2u.Creator.createLink(randomPos(), containerId);
+                }
+                else if (type && sc_type_link)
+                {
+                    const containerId = 's2u-window-' + sandbox.addr + '-' + addr + '-' + new Date().getUTCMilliseconds();
+                    const model_link = S2u.Creator.createLink(randomPosition(), containerId);
                     editor.scene.appendLink(model_link);
                     editor.scene.objects[addr] = model_link;
                     model_link.setScAddr(addr);
                     model_link.setObjectState(S2uObjectState.FromMemory);
                 }
-
             }
 
             editor.render.update();
@@ -80,51 +91,69 @@ function S2uFromScImpl(_sandbox, _editor, aMapping) {
         }
     };
 
-    var addTask = function (args) {
-        tasks.push(args);
-        if (!self.timeout) {
+    const addTask = function (task)
+    {
+        tasks.push(task);
+        if (!self.timeout)
+        {
             self.timeout = window.setInterval(doBatch, 10);
         }
         doBatch();
     };
 
-    var removeElement = function (addr) {
-        var obj = editor.scene.getObjectByScAddr(addr);
+    const removeElement = function (addr)
+    {
+        const obj = editor.scene.getObjectByScAddr(addr);
         if (obj)
+        {
             editor.scene.deleteObjects([obj]);
+        }
+
         editor.render.update();
         editor.scene.layout();
     };
 
     return {
-        update: function (added, element, arc) {
-
+        update: function (added, element, arc)
+        {
             if (added) {
-                window.sctpClient.get_arc(arc).done(function (r) {
-                    var el = r[1];
-                    window.sctpClient.get_element_type(el).done(function (t) {
-                        arcMapping[arc] = el;
-                        if (t & (sc_type_node | sc_type_link)) {
-                            addTask([el, t]);
-                        } else if (t & sc_type_arc_mask) {
-                            window.sctpClient.get_arc(el).done(function (r) {
-                                addTask([el, t, r[0], r[1]]);
+                window.sctpClient.get_arc(arc).done(function (r)
+                {
+                    const elem = r[1];
+                    window.sctpClient.get_element_type(elem).done(function (task)
+                    {
+                        arcMapping[arc] = elem;
+                        if (task && (sc_type_node || sc_type_link))
+                        {
+                            addTask([elem, task]);
+                        }
+                        else if (task && sc_type_arc_mask)
+                        {
+                            window.sctpClient.get_arc(elem).done(function (r)
+                            {
+                                addTask([elem, task, r[0], r[1]]);
                             });
-                        } else
-                            throw "Unknown element type " + t;
+                        }
+                        else
+                        {
+                            throw "Unknown element type " + task;
+                        }
                     });
                 });
-            } else {
-                var e = arcMapping[arc];
-                if (e)
-                    removeElement(e);
+            }
+            else
+            {
+                const elem = arcMapping[arc];
+                if (elem)
+                {
+                    removeElement(elem);
+                }
             }
         }
     };
 
-};
+}
 
-// ----------------------------------------------------------------------
 
 //! TODO: refactoring
 function s2uScStructTranslator(_editor, _sandbox) {
@@ -369,9 +398,9 @@ function s2uScStructTranslator(_editor, _sandbox) {
             }
 
             var translateContours = function () {
-                var dfdCountours = new jQuery.Deferred();
+                var dfdContours = new jQuery.Deferred();
 
-                // now need to process arcs from countours to child elements
+                // now need to process arcs from contours to child elements
                 var arcGen = function (contour, child) {
                     var dfd = new jQuery.Deferred();
 
@@ -395,9 +424,9 @@ function s2uScStructTranslator(_editor, _sandbox) {
                     }
                 }
 
-                fQueue.Queue.apply(this, acrFuncs).done(dfdCountours.resolve).fail(dfdCountours.reject);
+                fQueue.Queue.apply(this, acrFuncs).done(dfdContours.resolve).fail(dfdContours.reject);
 
-                return dfdCountours.promise();
+                return dfdContours.promise();
             }
 
             /// --------------------
