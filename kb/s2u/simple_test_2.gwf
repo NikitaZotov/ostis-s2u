@@ -162,7 +162,7 @@
         <pair type="pair/const/pos/perm/orient/membership" idtf="" shapeColor="0" id="94914510278000" parent="94914500974736" id_b="94914509657248" id_e="94914509575392" b_x="213.5" b_y="951.5" e_x="153.5" e_y="951.5" dotBBalance="0" dotEBalance="0">
             <points/>
         </pair>
-        <contour type="contour/const/perm" idtf="" shapeColor="193" id="94914500974736" parent="0">
+        <contour type="contour/const/perm" idtf="test_s2u_2" shapeColor="0" id="94914500974736" parent="0" left="0" top="0" right="64.2969" bottom="23" textColor="164" text_angle="0" text_font="Times New Roman [Arial]" font_size="10" idtf_pos_x="-47" idtf_pos_y="-255">
             <points>
                 <point x="3.5" y="606.5"/>
                 <point x="888.5" y="606.5"/>
@@ -170,7 +170,7 @@
                 <point x="3.5" y="1056.5"/>
             </points>
         </contour>
-        <node type="node/const/perm/general" idtf="" shapeColor="0" id="94914509936736" parent="0" x="1033.5" y="703.5" haveBus="false" idtf_pos="0">
+        <node type="node/const/perm/general" idtf="" shapeColor="193" id="94914509936736" parent="0" x="1033.5" y="703.5" haveBus="false" idtf_pos="0">
             <content type="1" mime_type="content/term" content_visibility="true" file_name=""><![CDATA[test s2u 2]]></content>
         </node>
         <node type="node/const/perm/group" idtf="lang_en" shapeColor="0" id="94914509922096" parent="0" left="0" top="0" right="51.3125" bottom="23" textColor="164" text_angle="0" text_font="Times New Roman [Arial]" font_size="10" x="1033.5" y="628.5" haveBus="false" idtf_pos="0">
