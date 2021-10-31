@@ -1,11 +1,27 @@
-var S2uDebug = {
+var S2uLogger = {
 
-    enabled: true,
+    error: true,
+    debug: true,
+    info: true,
 
-    error: function (message) {
-        if (!this.enabled) return; // do nothing
+    logError: function (message) {
+        if (!this.error)
+            return;
 
-        throw message;
+        console.log(`S2u: Error: ${message}`);
+    },
+
+    logDebug: function (message) {
+        if (!this.debug)
+            return;
+
+        console.log(`S2u: Debug: ${message}`);
+    },
+
+    logInfo: function (message) {
+        if (!this.info)
+            return;
+
+        console.log(`S2u: Info: ${message}`);
     }
-
 }
