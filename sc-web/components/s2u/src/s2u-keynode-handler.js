@@ -1,6 +1,6 @@
 S2uKeynodesHandler = {
 
-    systemIds: [
+    systemKeynodes: [
         'nrel_position_x',
         'nrel_position_y',
         'element_class_image',
@@ -13,17 +13,17 @@ S2uKeynodesHandler = {
 
     load: false,
 
-    initSystemIds: function (callback, ids) {
-        ids || (ids = this.systemIds);
-        var self = this;
-        SCWeb.core.Server.resolveScAddr(ids, function (keynodes) {
+    initSystemKeynodes: function (callback, keynodes) {
+        let self = this;
+
+        keynodes || (keynodes  = self.systemKeynodes);
+        SCWeb.core.Server.resolveScAddr(keynodes, function (keynodes) {
             Object.getOwnPropertyNames(keynodes).forEach(function (key) {
-                console.log('S2U: Resolved keynode: ' + key + ' = ' + keynodes[key]);
+                S2uLogger.logDebug(`Resolved keynode: ${key} = ${keynodes[key]}`);
                 self.scKeynodes[key] = keynodes[key];
             });
             self.load = true;
             callback();
         });
     }
-
 };

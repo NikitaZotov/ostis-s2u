@@ -7,13 +7,9 @@ S2u.TemplateFinder = function () {
     this.templates = [];
 };
 
-let testPos;
-
 S2u.TemplateFinder.prototype = {
 
-
     init: function (params) {
-
         this.contour = params.contour;
         this.editor = params.scene;
         this.scene = params.editor.scene;
@@ -22,12 +18,10 @@ S2u.TemplateFinder.prototype = {
     },
 
     drawByContour: function () {
-
-        testPos = this;
-
-        console.log(`S2U: draw contour ${this.contour}`);
+        S2uLogger.logDebug(`Draw contour ${this.contour}`);
 
         let self = this;
+
         let promiseObject = S2uObjectsHandler.addAllObjectsByContour(self.contour);
         promiseObject.then(objects => {
             self.getObjectsInContour(objects)
@@ -35,26 +29,28 @@ S2u.TemplateFinder.prototype = {
     },
 
     getObjectsInContour: function (objects) {
+        S2uLogger.logDebug(`Get objects in contour ${this.contour}`);
+
+        let self = this;
 
         function getRandomInt0to100() {
             return Math.floor(Math.random() * (1000));
         }
 
-        console.log(`S2U: get objects in contour ${this.contour}`);
-        let self = this;
-
-        let elements = objects[S2uObjectsHandler.ELEMENTS_CONST];
+        let elements = objects[S2uObjectsHandler.NODES_CONST];
         let connectors = objects[S2uObjectsHandler.CONNECTORS_CONST];
-        console.log(elements);
-        console.log(connectors);
+
+        S2uLogger.logDebug(`Elements: ${elements}`);
+        S2uLogger.logDebug(`Connectors ${connectors}`);
 
         let elementsPromise = elements.map((element) => {
             return self.getElements(element)
         });
 
         Promise.all(elementsPromise).then((array) => {
-            console.log(`S2U: get elements`);
-            console.log(array);
+            S2uLogger.logDebug(`Get elements`);
+            S2uLogger.logDebug(array);
+
             let templatesParams = [];
 
             array.forEach(elements => {
@@ -73,8 +69,9 @@ S2u.TemplateFinder.prototype = {
             });
 
             Promise.all(connectorsPromise).then((array) => {
-                console.log(`S2U: get connectors`);
-                console.log(array);
+                S2uLogger.logDebug(`Get connectors`);
+                S2uLogger.logDebug(array);
+
                 array.forEach(elements => {
                     elements.forEach(model => {
                         let object = self.findSourceAndTargetByModel(model);
@@ -83,7 +80,7 @@ S2u.TemplateFinder.prototype = {
                             self.scene.appendObject(edge);
                             edge.sc_addr = model.node;
                         } else {
-                            console.log(`S2U: Error, can not create arrow ${model.source} -> ${model.target} for ${model.node}`);
+                            S2uLogger.logError(`Can not create arrow ${model.source} -> ${model.target} for ${model.node}`);
                         }
                     });
                 });
@@ -97,6 +94,7 @@ S2u.TemplateFinder.prototype = {
 
     getElements: function (element) {
         let self = this;
+
         return new Promise((resolve, reject) => {
             window.sctpClient.iterate_constr(
                 SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
@@ -121,19 +119,20 @@ S2u.TemplateFinder.prototype = {
                 arrayAddr = arrayAddr.filter((v, i, a) => a.indexOf(v) === i);
 
                 arrayAddr.forEach((addr) => {
-                    console.log(`S2U: find ${element} - ${addr}`);
-                    if (!S2uObjectsHandler.objectsElementMap[addr]) {
-                        S2uObjectsHandler.objectsElementMap[addr] = element;
+                    S2uLogger.logDebug(`Found ${element} - ${addr}`);
+                    if (!S2uObjectsHandler.objectsNodesMap[addr]) {
+                        S2uObjectsHandler.objectsNodesMap[addr] = element;
                     } else {
-                        if (S2uObjectsHandler.objectsElementMap[addr] !== element) {
-                            throw  `S2uObjectsHandler.objectsElementMap[${addr}] = ${S2uObjectsHandler.objectsElementMap[addr]} but need set ${element}`
+                        if (S2uObjectsHandler.objectsNodesMap[addr] !== element) {
+                            throw `S2uObjectsHandler.objectsElementMap[${addr}] = 
+                            ${S2uObjectsHandler.objectsNodesMap[addr]} but need set ${element}`
                         }
                     }
                 });
 
                 resolve(arrayAddr)
             }).fail(function () {
-                console.log(`S2U: nothing find for element - ${element}`);
+                S2uLogger.logDebug(`Nothing found for element - ${element}`);
                 let returnData =  [];
                 resolve(returnData);
             });
@@ -142,6 +141,7 @@ S2u.TemplateFinder.prototype = {
 
     getConnectors: function (element) {
         let self = this;
+
         return new Promise((resolve, reject) => {
             window.sctpClient.iterate_constr(
                 SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
@@ -204,19 +204,20 @@ S2u.TemplateFinder.prototype = {
                 }
 
                 arrayAddr.forEach((model) => {
-                    console.log(`S2U: find ${element} - ${model.source} => ${model.node} => ${model.target}`);
+                    S2uLogger.logDebug(`Found ${element} - ${model.source} => ${model.node} => ${model.target}`);
                     if (!S2uObjectsHandler.objectsConnectorMap[model.node]) {
                         S2uObjectsHandler.objectsConnectorMap[model.node] = element;
                     } else {
                         if (S2uObjectsHandler.objectsConnectorMap[model.node] !== element) {
-                            throw  `S2uObjectsHandler.objectsConnectorMap[${model.node}] = ${S2uObjectsHandler.objectsConnectorMap[model.node]} but need set ${element}`
+                            throw `S2uObjectsHandler.objectsConnectorMap[${model.node}] = 
+                            ${S2uObjectsHandler.objectsConnectorMap[model.node]} but need set ${element}`
                         }
                     }
                 });
 
                 resolve(arrayAddr)
             }).fail(function () {
-                console.log(`S2U: nothing find for connector - ${element}`);
+                S2uLogger.debug(`Nothing found for connector - ${element}`);
                 let returnData =  [];
                 resolve(returnData);
             });
@@ -225,6 +226,7 @@ S2u.TemplateFinder.prototype = {
 
     loadTemplateParams: function (template,link) {
         let currentLanguage = this.sandbox.getCurrentLanguage();
+
         return new Promise((resolve, reject) => {
             let array = S2uObjectsHandler.getMatches(template, S2uObjectsHandler.TEMPLATE_REGEX);
             let promisesGetParams = array.map((idf) => {
@@ -251,12 +253,12 @@ S2u.TemplateFinder.prototype = {
                         let html = results.get(0, "idf");
 
                         window.sctpClient.get_link_content(html).done(string => {
-                            console.log (`S2U: find for ${link.sc_addr} by ${idf}: ${string}`);
+                            S2uLogger.logDebug(`Found for ${link.sc_addr} by ${idf}: ${string}`);
                             link.mapIdf[idf] = string;
                             resolveIdf(string);
                         });
                     }).fail(function () {
-                        console.log(`S2U: nothing find for ${link.sc_addr} by ${idf}`);
+                        S2uLogger.logError(`Nothing found for ${link.sc_addr} by ${idf}`);
                         link.mapIdf[idf] = "null";
                         resolveIdf("null");
                     });
@@ -270,7 +272,6 @@ S2u.TemplateFinder.prototype = {
     },
 
     findSourceAndTargetByModel: function (model) {
-
         let source;
         let target;
 
@@ -341,7 +342,7 @@ S2u.TemplateFinder.prototype = {
                         });
                     });
                 }).fail(function () {
-                    console.log(`S2U: nothing find position for ${element.sc_addr}`);
+                    S2uLogger.logError(`Nothing found position for ${element.sc_addr}`);
                     needAutoLayout = true;
                     resolve(element.position);
                 });

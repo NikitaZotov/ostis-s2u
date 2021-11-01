@@ -7,7 +7,7 @@ S2uComponent = {
             if (S2uKeynodesHandler.load) {
                 resolve(s2uViewerWindow(sandbox));
             } else {
-                S2uKeynodesHandler.initSystemIds(function () {
+                S2uKeynodesHandler.initSystemKeynodes(function () {
                     resolve(s2uViewerWindow(sandbox));
                 })
             }
@@ -18,8 +18,8 @@ S2uComponent = {
 
 /**
  * s2uViewerWindow
- * @param config
  * @constructor
+ * @param sandbox
  */
 var s2uViewerWindow = function (sandbox) {
 

@@ -1,14 +1,14 @@
 S2uObjectsHandler = {
 
-    elements: {},
+    nodes: {},
 
-    ELEMENTS_CONST: "elements",
+    NODES_CONST: "elements",
 
     connectors: {},
 
     CONNECTORS_CONST: "connectors",
 
-    objectsElementMap: {},
+    objectsNodesMap: {},
 
     objectsConnectorMap: {},
 
@@ -25,21 +25,24 @@ S2uObjectsHandler = {
         let self = this;
         return new Promise(function (resolve, reject) {
             let promiseElement = self.addAllObjectsByContourParam(
-                contour, self.ELEMENTS_CONST, S2uKeynodesHandler.scKeynodes.element_class_image
+                contour, self.NODES_CONST, S2uKeynodesHandler.scKeynodes.element_class_image
             );
             let promiseConnector = self.addAllObjectsByContourParam(
                 contour, self.CONNECTORS_CONST, S2uKeynodesHandler.scKeynodes.connector_class_image
             );
+
             Promise.all([promiseElement, promiseConnector]).then(function (data) {
-                console.log(`S2U: reload UI for contour ${contour}`);
-                let forReloadUI = [];
-                Object.keys(self.elements)
-                    .filter(el => !self.elements[el])
-                    .forEach(el => forReloadUI.push(el));
+                S2uLogger.logDebug(`Reload UI for contour ${contour}`);
+                let reloadableElements = [];
+
+                Object.keys(self.nodes)
+                    .filter(el => !self.nodes[el])
+                    .forEach(el => reloadableElements.push(el));
                 Object.keys(self.connectors)
                     .filter(el => !self.connectors[el])
-                    .forEach(el => forReloadUI.push(el));
-                let promiseReloadUi = self.loadUi(forReloadUI);
+                    .forEach(el => reloadableElements.push(el));
+
+                let promiseReloadUi = self.loadUi(reloadableElements);
                 promiseReloadUi.then((done) => {
                     let returnData = Object.assign(data[0], data[1]);
                     resolve(returnData)
@@ -49,12 +52,11 @@ S2uObjectsHandler = {
     },
 
     addAllObjectsByContourParam: function (contour, type, classAddr) {
-
-        if (type !== this.ELEMENTS_CONST && type !== this.CONNECTORS_CONST) {
+        if (type !== this.NODES_CONST && type !== this.CONNECTORS_CONST) {
             throw `S2U: error type: ${type}`
         }
 
-        console.log(`S2U: add all ${type} in contour ${contour}`);
+        S2uLogger.logDebug(`Add all ${type} in contour ${contour}`);
 
         let self = this;
 
@@ -76,6 +78,9 @@ S2uObjectsHandler = {
                     ]
                 )
             ).done(function (results) {
+                if (results.results.length === 0) {
+                    S2uLogger.logError(`Elements not found`)
+                }
 
                 let arrayAddr = [];
 
@@ -87,13 +92,13 @@ S2uObjectsHandler = {
                 arrayAddr = arrayAddr.filter((v, i, a) => a.indexOf(v) === i);
 
                 arrayAddr.forEach((addr) => {
-                    console.log(`S2U: find ${type} ${addr} for contour ${contour}`);
+                    S2uLogger.logDebug(`Found ${type} ${addr} for contour ${contour}`);
 
-                    let object = (type === self.ELEMENTS_CONST) ? self.elements : self.connectors;
+                    let object = (type === self.NODES_CONST) ? self.nodes : self.connectors;
                     if (object[addr]) {
-                        console.log(`S2U: find ${type} ${addr} already exist`);
+                        S2uLogger.logDebug(`Found ${type} ${addr} already exists`);
                     } else {
-                        console.log(`S2U: find ${type} ${addr} add`);
+                        S2uLogger.logDebug(`Found ${type} ${addr} add`);
                         object[addr] = null;
                     }
                 });
@@ -103,7 +108,7 @@ S2uObjectsHandler = {
 
                 resolve(returnData)
             }).fail(function () {
-                console.log(`S2U: nothing find ${type} for contour ${contour}`);
+                S2uLogger.logError(`Nothing found ${type} for contour ${contour}`);
                 let returnData = {};
                 returnData[type] = [];
                 resolve(returnData);
@@ -116,7 +121,7 @@ S2uObjectsHandler = {
         return new Promise(function (resolve, reject) {
             let elementsIterator = array.map((el) => {
                 return new Promise(function (resolveElement, rejectElement) {
-                    console.log(`S2U: find template text for ${el} `);
+                    S2uLogger.logDebug(`Found template text for ${el} `);
 
                     window.sctpClient.iterate_constr(
                         SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
@@ -130,67 +135,70 @@ S2uObjectsHandler = {
                             {"html": 2}
                         )
                     ).done(function (results) {
-
                         let html = results.get(0, "html");
 
                         window.sctpClient.get_link_content(html).done(htmlString => {
-                            console.log (`S2U: html string for ${el} - ${htmlString}`)
-                            if (self.elements[el] === null) {
-                                self.elements[el] = htmlString
+                            S2uLogger.logDebug(`Html string for ${el} - ${htmlString}`)
+                            if (self.nodes[el] === null) {
+                                self.nodes[el] = htmlString;
                             } else if (self.connectors[el] === null) {
-                                self.connectors[el] = htmlString
+                                self.connectors[el] = htmlString;
                             }
-                            resolveElement(htmlString)
+                            resolveElement(htmlString);
                         });
                     }).fail(function () {
-                        console.log(`S2U: not find template for ${el}`);
+                        S2uLogger.logDebug(`Not found template for ${el}`);
+                        let htmlString = null;
 
-                        if (self.elements[el] === null) {
-                            self.elements[el] = self.DEFAULT_ELEMENT;
-                        } else if (self.connectors[el] === null) {
-                            self.connectors[el] = self.DEFAULT_CONNECTOR;
+                        if (self.nodes[el] !== null) {
+                            htmlString = self.DEFAULT_ELEMENT;
+                        } else {
+                            htmlString = self.DEFAULT_CONNECTOR;
                         }
-                        resolveElement(htmlString)
+                        resolveElement(htmlString);
                     });
                 });
             });
 
             Promise.all(elementsIterator).then(function (data) {
+                let keynodes = [];
 
-                let ids = [];
                 data.forEach((template) => {
-                    ids = ids.concat(self.getMatches(template, self.TEMPLATE_REGEX));
+                    keynodes = keynodes.concat(self.getMatches(template, self.TEMPLATE_REGEX));
                 });
-                ids = ids.filter((v, i, a) => a.indexOf(v) === i);
-                ids = ids.filter((v, i, a) => !S2uKeynodesHandler.scKeynodes.hasOwnProperty(v));
-                console.log(`S2U: add ids: ${ids.toString()}`);
-                S2uKeynodesHandler.initSystemIds(() => resolve(data), ids);
+
+                keynodes = keynodes.filter((v, i, a) => a.indexOf(v) === i);
+                keynodes = keynodes.filter((v, i, a) => !S2uKeynodesHandler.scKeynodes.hasOwnProperty(v));
+                S2uLogger.logDebug(`Keynodes initiated: ${keynodes.toString()}`);
+                S2uKeynodesHandler.initSystemKeynodes(() => resolve(data), keynodes);
             });
         });
     },
 
     getMatches: function(string, regex, index) {
-        index || (index = 1); // default to the first capturing group
+        index || (index = 1);
         let matches = [];
         let match;
+
         while (match = regex.exec(string)) {
             matches.push(match[index]);
         }
+
         return matches;
     },
 
-    getElementTemplateForObject: function(addr){
-        if (!addr){
-            return this.DEFAULT_ELEMENT
+    getElementTemplateForObject: function(addr) {
+        if (!addr) {
+            return this.DEFAULT_ELEMENT;
         }
-        return this.elements[this.objectsElementMap[addr]]
+
+        return this.nodes[this.objectsNodesMap[addr]];
     },
 
-    getConnectorTemplateForObject: function(addr){
-        if (!addr){
-            return this.DEFAULT_CONNECTOR
+    getConnectorTemplateForObject: function(addr) {
+        if (!addr) {
+            return this.DEFAULT_CONNECTOR;
         }
-        return this.connectors[this.objectsConnectorMap[addr]]
+        return this.connectors[this.objectsConnectorMap[addr]];
     }
-
 };
