@@ -613,9 +613,9 @@ S2u.Render.prototype = {
         var self = this;
 
 
-        this.d3_drag_line.classed('S2uBus', this.scene.edit_mode == S2uEditMode.S2uModeBus)
+        this.d3_drag_line.classed('S2uBus', this.scene.edit_mode === S2uEditMode.S2uModeBus)
             .classed('dragline', true)
-            .classed('draglineBus', this.scene.edit_mode == S2uEditMode.S2uModeBus);
+            .classed('draglineBus', this.scene.edit_mode === S2uEditMode.S2uModeBus);
 
         // remove old points
         drag_line_points = this.d3_dragline.selectAll('use.S2uRemovePoint');
