@@ -8,22 +8,23 @@ S2u.Tree.prototype = {
 
     build: function (triples) {
 
+        let tpl;
         this.triples = [];
         this.triples = this.triples.concat(triples);
 
         // determine possible contours
-        var contours = {};
+        const contours = {};
         for (t in this.triples) {
-            var tpl = this.triples[t];
+            tpl = this.triples[t];
 
-            if (tpl[0].type & sc_type_node_struct)
-                contours[tpl[0].addr] = {el: tpl[0], childs: []};
+            if (tpl[0].type && sc_type_node_struct)
+                contours[tpl[0].addr] = {el: tpl[0], children: []};
         }
 
         // collect contour elements
-        var parentsDict = {};
+        const parentsDict = {};
         for (t in this.triples) {
-            var tpl = this.triples[t];
+            tpl = this.triples[t];
 
             if (tpl.ignore) continue;
 
@@ -59,17 +60,17 @@ S2u.TreeNode.prototype = {
         if (child.parent)
             child.parent.removeChild(child);
 
-        if (S2uDebug.eanbled && this.hasChild(child))
+        if (S2uDebug.enabled && this.hasChild(child))
             S2uDebug.error("Duplicate child item");
 
         this.childs.push(child);
     },
 
     removeChild: function (child) {
-        if (child.parent != this)
+        if (child.parent !== this)
             S2uDebug.error("Item not found");
 
-        var idx = this.childs.indexOf(child);
+        const idx = this.childs.indexOf(child);
         if (idx >= 0)
             this.childs.splice(idx, 1);
 
